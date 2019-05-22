@@ -18,18 +18,8 @@ class PersonLevel extends ActiveRecord{
   var id:String = _
   @Column(name = "hukou_dimen_id")
   var hukouDimenId:String = _
-  @Column(name = "gender")
-  var gender:Int = _
-  @Column(name = "race_dimen_id")
-  var raceDimenId:String = _
-  @Column(name = "min_age")
-  var minAge:Int = _
-  @Column(name = "max_age")
-  var maxAge:Int = _
   @Column(name = "case_dimen_id")
   var caseDimenId:String = _
-  @Column(name = "criminal_record")
-  var criminalRecord:Int = _
   @Column(name = "input_time")
   var inputTime:Date = _
   @Column(name = "flag")
@@ -37,20 +27,13 @@ class PersonLevel extends ActiveRecord{
 
   def this(id:String
            ,hukouDimenId:String
-           ,gender:Int
-           ,raceDimenId:String
-           ,minAge:Int
-           ,maxAge:Int
-           ,caseDimenId:String,criminalRecord:Int,inputTime:Date,flag:Int){
+           ,caseDimenId:String
+           ,inputTime:Date
+           ,flag:Int){
     this()
     this.id = id
     this.hukouDimenId = hukouDimenId
-    this.gender = gender
-    this.raceDimenId = raceDimenId
-    this.minAge = minAge
-    this.maxAge = maxAge
     this.caseDimenId = caseDimenId
-    this.criminalRecord = criminalRecord
     this.inputTime = inputTime
     this.flag = flag
   }

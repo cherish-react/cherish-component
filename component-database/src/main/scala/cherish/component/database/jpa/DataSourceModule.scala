@@ -18,11 +18,15 @@ object DataSourceModule {
   @EagerLoad
   def buildDataSource(hub: RegistryShutdownHub): DataSource ={
     val hikariConfig = new HikariConfig()
-    hikariConfig.setDriverClassName("com.mysql.jdbc.Driver")
-    hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306" + "/monitor" +"?useUnicode=true&characterEncoding=utf8")
-    hikariConfig.setUsername("root")
-    hikariConfig.setPassword("root")
-    hikariConfig.setConnectionTestQuery("select 1")
+//    hikariConfig.setDriverClassName("com.mysql.jdbc.Driver")
+//    hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306" + "/monitor" +"?useUnicode=true&characterEncoding=utf8")
+//    hikariConfig.setUsername("root")
+//    hikariConfig.setPassword("admin")
+    hikariConfig.setDriverClassName("oracle.jdbc.driver.OracleDriver")
+    hikariConfig.setJdbcUrl("jdbc:oracle:thin:@192.168.1.214:1521:oragafis")
+    hikariConfig.setUsername("afis")
+    hikariConfig.setPassword("helloafis")
+    hikariConfig.setConnectionTestQuery("select 1 from dual")
     hikariConfig.setAutoCommit(false)
     hikariConfig.addDataSourceProperty("cachePrepStmts", "true")
     hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250")
@@ -43,5 +47,6 @@ object DataSourceModule {
 
   def contributeEntityManagerFactory(configuration:Configuration[String]): Unit ={
     configuration.add("cherish.component.jpa")
+    configuration.add("cherish.component.api.jpa")
   }
 }

@@ -6,10 +6,6 @@ package cherish.component.api.support.kryobean
   */
 class PersonLevelBean {
   var addressCode:String = _
-  var raceCode:String =_
   var caseCode:String =_
-  var gender:String =_
-  var minAge:String =_
-  var maxAge:String =_
   var criminalRecord:String =_
 }

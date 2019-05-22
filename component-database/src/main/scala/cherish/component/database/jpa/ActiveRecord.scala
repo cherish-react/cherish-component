@@ -84,28 +84,43 @@ abstract class ActiveRecordInstance[A](implicit val clazzTag:ClassTag[A]) extend
 
   //def applyDynamic(name:String)(params:Any*):String = macro SQLBuilderMacros.builderMacro[A]
   def applyDynamic(key:String)(params:Any*):java.util.ArrayList[A]  = {
-    val buffer = key.split("findBy_").toBuffer
-    val conditionSet = buffer(1).split("_and_").toSeq
-    if(conditionSet.size != params.size){
-      throw new IllegalArgumentException(s"param size is not equal condition size")
-    }
-
-    val sqlColumn = new ArrayBuffer[String]
-    clazz.getDeclaredFields.filter(t => t.isAnnotationPresent(classOf[Column]))
-      .map(t => sqlColumn += t.getAnnotation(classOf[Column]).name())
-
     var where = ""
     var count = 0
 
-    conditionSet.foreach{
-      m =>
+    val buffer = key.split("findBy_").toBuffer
+    if (buffer(1).indexOf("not_in") > 0) {
+      if (params.size >1) {
+        throw new IllegalArgumentException(s"param size > 1")
+      }
+
+      val conditionSet = buffer(1).split("_not_in").toSeq
+      val sqlColumn = new ArrayBuffer[String]
+      clazz.getDeclaredFields.filter(t => t.isAnnotationPresent(classOf[Column]))
+        .map(t => sqlColumn += t.getAnnotation(classOf[Column]).name())
+
+      where += sqlColumn(0) + " not in( " + params.toSeq(0) +")"
+
+    } else {
+      val conditionSet = buffer(1).split("_and_").toSeq
+      if (conditionSet.size != params.size) {
+        throw new IllegalArgumentException(s"param size is not equal condition size")
+      }
+
+      val sqlColumn = new ArrayBuffer[String]
+      clazz.getDeclaredFields.filter(t => t.isAnnotationPresent(classOf[Column]) && conditionSet.contains(t.getName))
+        .map(t => sqlColumn += t.getAnnotation(classOf[Column]).name())
+
+      sqlColumn.foreach {
+        m =>
           where += m + " = '" + params.toSeq(count) + "' AND "
           count += 1
+      }
     }
 
-    where += " 1=1"
+      where += " 1=1"
 
-    val sql = "SELECT * FROM " + tableName + " WHERE " +where
-    ActiveRecord.select(sql,classTag[A].runtimeClass)
+      val sql = "SELECT * FROM " + tableName + " WHERE " + where
+      ActiveRecord.select(sql, classTag[A].runtimeClass)
+
   }
 }

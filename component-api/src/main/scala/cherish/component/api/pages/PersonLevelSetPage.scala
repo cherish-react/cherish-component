@@ -28,28 +28,28 @@ class PersonLevelSetPage {
 
   def onActivate ={
 
-      val param_bytes = IOUtils.toByteArray(request.getInputStream)
-
-      val jSONObject = new JSONObject()
-      try{
-        if(param_bytes.length <=0){
-          throw new Exception("param length error")
-        }
-        val personLevelBean = KryoSupport.deserializer(param_bytes,new PersonLevelBean)
-        personLevelSetService.personLevelSet(personLevelBean.addressCode
-                                            ,personLevelBean.raceCode
-                                            ,personLevelBean.caseCode
-                                            ,personLevelBean.gender
-                                            ,personLevelBean.minAge
-                                            ,personLevelBean.maxAge
-                                            ,personLevelBean.criminalRecord)
-        jSONObject.put("success",true)
-        jSONObject.put("result","")
-      }catch {
-        case ex:Exception =>
-          jSONObject.put("success",false)
-          jSONObject.put("message",ex.getMessage)
-      }
-    new TextStreamResponse("text/plain", jSONObject.toString)
+//      val param_bytes = IOUtils.toByteArray(request.getInputStream)
+//
+//      val jSONObject = new JSONObject()
+//      try{
+//        if(param_bytes.length <=0){
+//          throw new Exception("param length error")
+//        }
+//        val personLevelBean = KryoSupport.deserializer(param_bytes,new PersonLevelBean)
+//        personLevelSetService.personLevelSet(personLevelBean.addressCode
+//                                            ,personLevelBean.raceCode
+//                                            ,personLevelBean.caseCode
+//                                            ,personLevelBean.gender
+//                                            ,personLevelBean.minAge
+//                                            ,personLevelBean.maxAge
+//                                            ,personLevelBean.criminalRecord)
+//        jSONObject.put("success",true)
+//        jSONObject.put("result","")
+//      }catch {
+//        case ex:Exception =>
+//          jSONObject.put("success",false)
+//          jSONObject.put("message",ex.getMessage)
+//      }
+//    new TextStreamResponse("text/plain", jSONObject.toString)
   }
 }
