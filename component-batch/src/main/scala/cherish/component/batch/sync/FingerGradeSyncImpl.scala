@@ -2,7 +2,7 @@ package cherish.component.batch.sync
 
 import java.io._
 
-import cherish.component.batch.service.FingerGradeService
+import cherish.component.batch.service.{FingerGradeService, JpaSaveOrUpdateService}
 import cherish.component.config.HallBatchConfig
 import cherish.component.jni.{NativeQualityScore, QualityImage}
 import cherish.component.jpa.{QualityScore, Tpcardimgmnt}
@@ -13,7 +13,8 @@ import org.apache.tapestry5.ioc.annotations.PostInjection
 import org.apache.tapestry5.ioc.services.cron.PeriodicExecutor
 
 class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
-                          fingerGradeService: FingerGradeService)extends LoggerSupport{
+                          fingerGradeService: FingerGradeService,
+                          jpaSaveOrUpdateService: JpaSaveOrUpdateService)extends LoggerSupport{
 
   /**
     * 捺印指纹质量评分定时任务
@@ -72,7 +73,7 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
       qualityScore.cardid = personId
       qualityScore.imgUrl = ftpPath
       qualityScore.totalScore = totalScore
-      qualityScore.save()
+      jpaSaveOrUpdateService.qualityScoreSave(qualityScore)
 
       //根据设置分数判断人员指纹是否达标
       fingerGradeService.isQualified(personId)

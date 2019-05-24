@@ -61,7 +61,7 @@ class PersonInfo extends ActiveRecord {
   var printUnitName: java.lang.String = _
   @Column(name = "printer", length = 40)
   var printer: java.lang.String = _
-  @Column(name = "printdate", length = 9)
+  @Column(name = "printdate", length = 20)
   var printdate: java.lang.String = _
   @Column(name = "printer_tel", length = 32)
   var printerTel: java.lang.String = _
@@ -71,8 +71,8 @@ class PersonInfo extends ActiveRecord {
   var personLevel: java.lang.Integer = _
   @Column(name = "level_id", length = 32)
   var levelId: java.lang.String = _
-  @Column(name = "is_compel_pass", length = 1)
-  var isCompelPass: java.lang.Integer = _
+  @Column(name = "is_compel_pass", length = 20)
+  var isCompelPass: java.lang.String = _
   @Column(name = "is_convert", length = 1)
   var isConvert: java.lang.Integer = _
   @Column(name = "is_qualified", length = 1)
@@ -124,7 +124,7 @@ class PersonInfo extends ActiveRecord {
     this.id = id
   }
 
-  def this(id: java.lang.String, name: java.lang.String, aliasname: java.lang.String, sex: java.lang.String, birthday: java.lang.String, idcard: java.lang.String, birthAddressCode: java.lang.String, birthAddress: java.lang.String, addressCode: java.lang.String, address: java.lang.String, nation: java.lang.String, race: java.lang.String, criminalRecord: java.lang.Integer, personid: java.lang.String, personType: java.lang.String, caseType1: java.lang.String, caseType2: java.lang.String, caseType3: java.lang.String, printUnitCode: java.lang.String, printUnitName: java.lang.String, printer: java.lang.String, printdate: java.lang.String, printerTel: java.lang.String, printerIdcard: java.lang.String, personLevel: java.lang.Integer, levelId: java.lang.String, isCompelPass: java.lang.Integer, isConvert: java.lang.Integer, isQualified: java.lang.Integer, rmp: Array[Byte], rsp: Array[Byte], rzp: Array[Byte], rhp: Array[Byte], rxp: Array[Byte], lmp: Array[Byte], lsp: Array[Byte], lzp: Array[Byte], lhp: Array[Byte], lxp: Array[Byte], rmr: Array[Byte], rsr: Array[Byte], rzr: Array[Byte], rhr: Array[Byte], rxr: Array[Byte], lmr: Array[Byte], lsr: Array[Byte], lzr: Array[Byte], lhr: Array[Byte], lxr: Array[Byte]) {
+  def this(id: java.lang.String, name: java.lang.String, aliasname: java.lang.String, sex: java.lang.String, birthday: java.lang.String, idcard: java.lang.String, birthAddressCode: java.lang.String, birthAddress: java.lang.String, addressCode: java.lang.String, address: java.lang.String, nation: java.lang.String, race: java.lang.String, criminalRecord: java.lang.Integer, personid: java.lang.String, personType: java.lang.String, caseType1: java.lang.String, caseType2: java.lang.String, caseType3: java.lang.String, printUnitCode: java.lang.String, printUnitName: java.lang.String, printer: java.lang.String, printdate: java.lang.String, printerTel: java.lang.String, printerIdcard: java.lang.String, personLevel: java.lang.Integer, levelId: java.lang.String, isCompelPass: java.lang.String, isConvert: java.lang.Integer, isQualified: java.lang.Integer, rmp: Array[Byte], rsp: Array[Byte], rzp: Array[Byte], rhp: Array[Byte], rxp: Array[Byte], lmp: Array[Byte], lsp: Array[Byte], lzp: Array[Byte], lhp: Array[Byte], lxp: Array[Byte], rmr: Array[Byte], rsr: Array[Byte], rzr: Array[Byte], rhr: Array[Byte], rxr: Array[Byte], lmr: Array[Byte], lsr: Array[Byte], lzr: Array[Byte], lhr: Array[Byte], lxr: Array[Byte]) {
     this()
     this.id = id
     this.name = name

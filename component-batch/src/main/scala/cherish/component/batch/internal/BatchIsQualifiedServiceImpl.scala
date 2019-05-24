@@ -3,7 +3,7 @@ package cherish.component.batch.internal
 import java.util.{Date, UUID}
 import java.util.concurrent.Executors
 
-import cherish.component.batch.service.{BatchIsQualifiedService, FingerGradeService}
+import cherish.component.batch.service.{BatchIsQualifiedService, FingerGradeService, JpaSaveOrUpdateService}
 import cherish.component.config.HallBatchConfig
 import cherish.component.jpa.{PersonInfo, WorkQueue}
 import cherish.component.util.HttpClientUtils
@@ -15,7 +15,8 @@ import monad.support.services.LoggerSupport
   * @since 2019/5/17
   */
 class BatchIsQualifiedServiceImpl(fingerGradeService: FingerGradeService,
-                                  hallBatchConfig: HallBatchConfig) extends BatchIsQualifiedService with LoggerSupport{
+                                  hallBatchConfig: HallBatchConfig,
+                                  jpaSaveOrUpdateService: JpaSaveOrUpdateService) extends BatchIsQualifiedService with LoggerSupport{
 
   private lazy val executor = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors())
 
@@ -30,7 +31,7 @@ class BatchIsQualifiedServiceImpl(fingerGradeService: FingerGradeService,
       workQueue.beginTime = new Date()
       workQueue.workType = 2
       workQueue.workState = 1
-      workQueue.save()
+      jpaSaveOrUpdateService.workQueueSave(workQueue)
 
       executor.execute(new Runnable {
         override def run(): Unit ={
@@ -53,7 +54,7 @@ class BatchIsQualifiedServiceImpl(fingerGradeService: FingerGradeService,
           //判断是否达标完成后，修改work_queue状态,并通知统计服务
           workQueue.endTime = new Date()
           workQueue.workState = 2
-          workQueue.update()
+          jpaSaveOrUpdateService.workQueueUpdate(workQueue)
           try{
             val result = HttpClientUtils.doGet(hallBatchConfig.rpc + "/pages/statistics/changeWorkQueueState/2")
           }catch{

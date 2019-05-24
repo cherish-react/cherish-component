@@ -3,7 +3,7 @@ package cherish.component.batch.sync
 import java.util.Date
 
 import cherish.component.api.jpa.{CaseDimen, HukouDimen, PersonLevel}
-import cherish.component.batch.service.BatchIsQualifiedService
+import cherish.component.batch.service.{BatchIsQualifiedService, JpaSaveOrUpdateService}
 import cherish.component.config.HallBatchConfig
 import cherish.component.jpa.{PersonInfo, QualityScore, WorkQueue}
 import monad.core.services.{CronScheduleWithStartModel, StartAtDelay}
@@ -12,7 +12,8 @@ import org.apache.tapestry5.ioc.annotations.PostInjection
 import org.apache.tapestry5.ioc.services.cron.PeriodicExecutor
 
 class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
-                          batchIsQualifiedService: BatchIsQualifiedService)extends LoggerSupport{
+                          batchIsQualifiedService: BatchIsQualifiedService,
+                          jpaSaveOrUpdateService: JpaSaveOrUpdateService)extends LoggerSupport{
 
   /**
     * 人员定级定时任务
@@ -49,7 +50,7 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
       for (i <- 0 to personInfoList.size()) {
         val personInfo = personInfoList.get(i)
         if (personLevel == null) {
-          updatePersonInfo(personInfo, 3, personLevel.id)
+          jpaSaveOrUpdateService.updatePersonInfo(personInfo, 3, personLevel.id)
         } else {
           val birthAddressCode = personInfo.birthAddressCode
           //人员出生地代码
@@ -66,18 +67,18 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
           if (is_hukou_dimen) {
             if (is_case_dimen) {
               //满足两种定级标准为A级
-              updatePersonInfo(personInfo, 1, personLevel.id)
+              jpaSaveOrUpdateService.updatePersonInfo(personInfo, 1, personLevel.id)
             } else {
               //满足一种定级标准为B级
-              updatePersonInfo(personInfo, 2, personLevel.id)
+              jpaSaveOrUpdateService.updatePersonInfo(personInfo, 2, personLevel.id)
             }
           } else {
             if (is_case_dimen) {
               //满足一种定级标准为B级
-              updatePersonInfo(personInfo, 2, personLevel.id)
+              jpaSaveOrUpdateService.updatePersonInfo(personInfo, 2, personLevel.id)
             } else {
               //两种定级标准均不满足为C级
-              updatePersonInfo(personInfo, 3, personLevel.id)
+              jpaSaveOrUpdateService.updatePersonInfo(personInfo, 3, personLevel.id)
             }
           }
         }
@@ -89,7 +90,7 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
         var workQueue = workQueueList.get(0)
         workQueue.workState = 2
         workQueue.endTime = new Date()
-        workQueue.update()
+        jpaSaveOrUpdateService.workQueueUpdate(workQueue)
 
         batchIsQualifiedService.batchIsQualified()
       }
@@ -97,11 +98,5 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
 
   }
 
-  def updatePersonInfo(personInfo: PersonInfo, personLevel:Int, levelId:String): Unit ={
-    personInfo.personLevel = personLevel
-    personInfo.levelId = levelId
-    personInfo.update()
-    logger.info("人员定级成功:"+ personInfo.personid)
-  }
 
 }
