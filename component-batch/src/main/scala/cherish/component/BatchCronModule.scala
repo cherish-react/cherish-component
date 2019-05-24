@@ -1,6 +1,6 @@
 package cherish.component
 
-import nirvana.hall.api.internal.sync.FingerGradeSyncImpl
+import cherish.component.batch.sync.{FingerGradeSyncImpl, PersonGradeSyncImpl}
 import org.apache.tapestry5.ioc.ServiceBinder
 
 
@@ -12,7 +12,8 @@ object BatchCronModule {
 
 
   def bind(binder: ServiceBinder): Unit ={
-//    binder.bind(classOf[FingerGradeSyncImpl]).eagerLoad()
+    binder.bind(classOf[FingerGradeSyncImpl]).eagerLoad()
+    binder.bind(classOf[PersonGradeSyncImpl]).eagerLoad()
   }
 
 }

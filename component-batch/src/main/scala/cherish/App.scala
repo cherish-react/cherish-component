@@ -26,7 +26,7 @@ object App extends JettyServerSupport with LoggerSupport{
     )
     val loggger = LoggerFactory.getLogger(classOf[App])
     val webConfig = new WebServerConfig
-    webConfig.bind = "127.0.0.1:8081"
+    webConfig.bind = "0.0.0.0:10000"
     startServer(webConfig,"cherish.component",classes:_*)
     loggger.info("started")
     join

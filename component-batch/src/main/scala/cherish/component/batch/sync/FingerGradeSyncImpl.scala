@@ -1,11 +1,11 @@
-package nirvana.hall.api.internal.sync
+package cherish.component.batch.sync
 
 import java.io._
 
 import cherish.component.batch.service.FingerGradeService
 import cherish.component.config.HallBatchConfig
 import cherish.component.jni.{NativeQualityScore, QualityImage}
-import cherish.component.jpa.{ImageData, PersonInfo, QualityScore, Tpcardimgmnt}
+import cherish.component.jpa.{QualityScore, Tpcardimgmnt}
 import cherish.component.util.{FtpUtil, KryoListConvertUtils}
 import monad.core.services.{CronScheduleWithStartModel, StartAtDelay}
 import monad.support.services.LoggerSupport
@@ -133,7 +133,6 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
 
     val saveOriginImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort, hallBatchConfig.ftpPath + "/" + personId, personId+ "_" + fgp +".bmp", new ByteArrayInputStream(origin))
     val saveRwImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort, hallBatchConfig.ftpPath + "/" + personId, personId+ "_" + fgp +".jpg", new ByteArrayInputStream(rwImg))
-    //todo 校验保存是否成功，若失败可记录相关日志
     if(!saveOriginImg) logger.info("保存原图-" + personId+ "_" + fgp +".bmp" + "- 失败")
     if(!saveRwImg) logger.info("保存红白图-" + personId+ "_" + fgp +".jpg" + "- 失败")
   }
