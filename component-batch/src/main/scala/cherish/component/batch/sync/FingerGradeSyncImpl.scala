@@ -38,7 +38,7 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
   }
 
   def doWork(): Unit ={
-    val tpcardimgmntList = Tpcardimgmnt.select("select t.* from tpcardimgmnt t,personinfo p where t.flag = 0 and t.personid = p.personid and p.personLevel is not null and rownum <11").getResultList.asInstanceOf[java.util.ArrayList[Tpcardimgmnt]].iterator()
+    val tpcardimgmntList = Tpcardimgmnt.selectByA("select t.* from tpcardimgmnt t,personinfo p where t.flag = 0 and t.personid = p.personid and p.person_level is not null and rownum <11").iterator()
     System.loadLibrary("java_cherishqualityutil")
 
     //遍历personinfoList 调用动态库打分，存入quality_score表

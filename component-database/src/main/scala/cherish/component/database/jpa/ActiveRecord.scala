@@ -46,7 +46,7 @@ object ActiveRecord {
       entityManager.createNativeQuery(sql)
     }
 
-    def select[T:ClassTag](sql:String,resultClass:Class[_]): java.util.ArrayList[T]={
+    def select[T](sql:String,resultClass:Class[_]): java.util.ArrayList[T]={
       entityManager.createNativeQuery(sql,resultClass).getResultList.asInstanceOf[java.util.ArrayList[T]]
     }
 }
@@ -76,6 +76,10 @@ abstract class ActiveRecordInstance[A](implicit val clazzTag:ClassTag[A]) extend
 
   def select(sql:String):Query ={
     ActiveRecord.select(sql)
+  }
+
+  def selectByA(sql:String): java.util.ArrayList[A] ={
+    ActiveRecord.select(sql, classTag[A].runtimeClass)
   }
 
   def get: java.util.ArrayList[A] ={

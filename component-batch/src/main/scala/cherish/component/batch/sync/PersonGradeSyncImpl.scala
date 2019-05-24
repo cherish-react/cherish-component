@@ -38,12 +38,13 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
 
   def doWork(): Unit ={
     //查询personinfo表中person_level和 level_id为空的数据
-    val personInfoList = PersonInfo.select("select * from personinfo where person_level is null and rownum <11").getResultList.asInstanceOf[java.util.List[PersonInfo]]
+    val personInfoList = PersonInfo.selectByA("select * from personinfo where person_level is null and rownum <11")
     if(personInfoList.size()>0) {
-      val personLevel = PersonLevel.find_by_flag(1).asInstanceOf[List[PersonLevel]].head
+      val personLevelList = PersonLevel.findBy_flag(1)
+      val personLevel = if(personLevelList.size()>0) personLevelList.get(0) else null
       // 人员定级标准表 flag=1
-      val hukouDimen = HukouDimen.select("select address_code from hukou_dimen where dimen_id in(" + personLevel.hukouDimenId + ")").getResultList.asInstanceOf[java.util.List[String]]
-      val caseDimen = CaseDimen.select("select case_code from case_dimen where dimen_id in (" + personLevel.caseDimenId + ")").getResultList.asInstanceOf[java.util.List[String]]
+      val hukouDimen = HukouDimen.select("select address_code from hukou_dimen where dimen_id = '" + personLevel.hukouDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
+      val caseDimen = CaseDimen.select("select case_code from case_dimen where dimen_id =' " + personLevel.caseDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
 
       for (i <- 0 to personInfoList.size()) {
         val personInfo = personInfoList.get(i)
@@ -100,6 +101,7 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
     personInfo.personLevel = personLevel
     personInfo.levelId = levelId
     personInfo.update()
+    logger.info("人员定级成功:"+ personInfo.personid)
   }
 
 }
