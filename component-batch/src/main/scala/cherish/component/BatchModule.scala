@@ -1,7 +1,7 @@
 package cherish.component
 
-import cherish.component.batch.internal.{BatchIsQualifiedServiceImpl, ExtractDataServiceImpl, FingerGradeServiceImpl}
-import cherish.component.batch.service.{BatchIsQualifiedService, ExtractDataService, FingerGradeService}
+import cherish.component.batch.internal.{BatchIsQualifiedServiceImpl, ExtractDataServiceImpl, FingerGradeServiceImpl, JpaSaveOrUpdateServiceImpl}
+import cherish.component.batch.service.{BatchIsQualifiedService, ExtractDataService, FingerGradeService, JpaSaveOrUpdateService}
 import org.apache.tapestry5.ioc.ServiceBinder
 
 /**
@@ -15,6 +15,7 @@ object BatchModule {
     binder.bind(classOf[ExtractDataService],classOf[ExtractDataServiceImpl])
     binder.bind(classOf[FingerGradeService],classOf[FingerGradeServiceImpl])
     binder.bind(classOf[BatchIsQualifiedService],classOf[BatchIsQualifiedServiceImpl])
+    binder.bind(classOf[JpaSaveOrUpdateService],classOf[JpaSaveOrUpdateServiceImpl])
   }
 
 }

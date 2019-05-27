@@ -47,7 +47,7 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
       val hukouDimen = HukouDimen.select("select address_code from hukou_dimen where dimen_id = '" + personLevel.hukouDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
       val caseDimen = CaseDimen.select("select case_code from case_dimen where dimen_id =' " + personLevel.caseDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
 
-      for (i <- 0 to personInfoList.size()) {
+      for (i <- 0 until personInfoList.size()) {
         val personInfo = personInfoList.get(i)
         if (personLevel == null) {
           jpaSaveOrUpdateService.updatePersonInfo(personInfo, 3, personLevel.id)
