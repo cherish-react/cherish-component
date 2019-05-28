@@ -1,7 +1,7 @@
 package cherish.component.batch.internal
 
 import cherish.component.batch.service.JpaSaveOrUpdateService
-import cherish.component.jpa.{PersonInfo, QualityScore, WorkQueue}
+import cherish.component.jpa.{PersonInfo, QualityScore, Tpcardimgmnt, WorkQueue}
 import monad.support.services.LoggerSupport
 
 
@@ -19,6 +19,10 @@ class JpaSaveOrUpdateServiceImpl extends JpaSaveOrUpdateService with LoggerSuppo
     logger.info("人员定级成功:"+ personInfo.personid)
   }
 
+  def updatePersonInfo(personInfo: PersonInfo): Unit ={
+    personInfo.update()
+  }
+
   override def workQueueSave(workQueue: WorkQueue): Unit ={
     workQueue.save()
   }
@@ -30,4 +34,9 @@ class JpaSaveOrUpdateServiceImpl extends JpaSaveOrUpdateService with LoggerSuppo
   override def qualityScoreSave(qualityScore: QualityScore): Unit ={
     qualityScore.save()
   }
+
+  override def tpcardimgmntUpdate(tpcardimgmnt: Tpcardimgmnt): Unit ={
+    tpcardimgmnt.update()
+  }
+
 }

@@ -1,6 +1,7 @@
 package cherish.component.batch.sync
 
 import java.io._
+import java.util.UUID
 
 import cherish.component.batch.service.{FingerGradeService, JpaSaveOrUpdateService}
 import cherish.component.config.HallBatchConfig
@@ -16,6 +17,8 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
                           fingerGradeService: FingerGradeService,
                           jpaSaveOrUpdateService: JpaSaveOrUpdateService)extends LoggerSupport{
 
+
+  var qualityScore :QualityScore = null
   /**
     * 捺印指纹质量评分定时任务
     * @param periodicExecutor
@@ -46,7 +49,7 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
     while(tpcardimgmntList.hasNext){
       val tpcardimgmnt = tpcardimgmntList.next()
       val imgDataList = KryoListConvertUtils.deserializationList(tpcardimgmnt.imgData).iterator()
-      var qualityScore = new QualityScore
+      qualityScore = new QualityScore(UUID.randomUUID().toString.replace("-",""))
       var pScore :Double = 0   //平指采集独立得分
       var rScore :Double = 0   //滚指采集独立得分
       val personId = tpcardimgmnt.personid
@@ -54,9 +57,16 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
       while(imgDataList.hasNext){
         val imageData = imgDataList.next()
         if(null != imageData.mntData){
-          val qualityImage = NativeQualityScore.GetQualityScore(imageData.imgData,imageData.mntData,imageData.fgp,"QualityImage")   //图像打分
-          qualityScoreSet(imageData.fgp,qualityImage,qualityScore)  //QualityScore 给打完分的指位赋值
-          saveImg(personId, imageData.fgp, imageData.imgData, qualityImage.qualityImg)  //保存原图和红白图
+          try {
+            val qualityImage = NativeQualityScore.GetQualityScore(imageData.imgData, imageData.mntData, imageData.fgp, "QualityImage") //图像打分
+            qualityScore = qualityScoreSet(imageData.fgp, qualityImage.qualityScore*100, qualityScore) //QualityScore 给打完分的指位赋值
+            saveImg(personId, imageData.fgp, imageData.imgData, qualityImage.qualityImg) //保存原图和红白图
+          }catch {
+            case ex:Exception =>
+              ex.printStackTrace()
+          }
+        }else{
+          qualityScore = qualityScoreSet(imageData.fgp, 0, qualityScore) //没有特征默认0分
         }
       }
 
@@ -74,6 +84,9 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
       qualityScore.imgUrl = ftpPath
       qualityScore.totalScore = totalScore
       jpaSaveOrUpdateService.qualityScoreSave(qualityScore)
+      tpcardimgmnt.flag = 1
+      jpaSaveOrUpdateService.tpcardimgmntUpdate(tpcardimgmnt)
+
 
       //根据设置分数判断人员指纹是否达标
       fingerGradeService.isQualified(personId)
@@ -81,50 +94,51 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
 
   }
 
-  def qualityScoreSet(fgp :Int,qualityImage: QualityImage,qualityScore: QualityScore ): Unit ={
+  def qualityScoreSet(fgp :Int,imageScore: Float,qualityScore: QualityScore ): QualityScore ={
 
     fgp match {
-      case 0 =>
-        qualityScore.rmr = qualityImage.qualityScore
       case 1 =>
-        qualityScore.rsr = qualityImage.qualityScore
+        qualityScore.rmr = imageScore
       case 2 =>
-        qualityScore.rzr = qualityImage.qualityScore
+        qualityScore.rsr = imageScore
       case 3 =>
-        qualityScore.rhr = qualityImage.qualityScore
+        qualityScore.rzr = imageScore
       case 4 =>
-        qualityScore.rxr = qualityImage.qualityScore
+        qualityScore.rhr = imageScore
       case 5 =>
-        qualityScore.lmr = qualityImage.qualityScore
+        qualityScore.rxr = imageScore
       case 6 =>
-        qualityScore.lsr = qualityImage.qualityScore
+        qualityScore.lmr = imageScore
       case 7 =>
-        qualityScore.lzr = qualityImage.qualityScore
+        qualityScore.lsr = imageScore
       case 8 =>
-        qualityScore.lhr = qualityImage.qualityScore
+        qualityScore.lzr = imageScore
       case 9 =>
-        qualityScore.lxr = qualityImage.qualityScore
+        qualityScore.lhr = imageScore
       case 10 =>
-        qualityScore.rmp = qualityImage.qualityScore
+        qualityScore.lxr = imageScore
       case 11 =>
-        qualityScore.rsp = qualityImage.qualityScore
+        qualityScore.rmp = imageScore
       case 12 =>
-        qualityScore.rzp = qualityImage.qualityScore
+        qualityScore.rsp = imageScore
       case 13 =>
-        qualityScore.rhp = qualityImage.qualityScore
+        qualityScore.rzp = imageScore
       case 14 =>
-        qualityScore.rxp = qualityImage.qualityScore
+        qualityScore.rhp = imageScore
       case 15 =>
-        qualityScore.lmp = qualityImage.qualityScore
+        qualityScore.rxp = imageScore
       case 16 =>
-        qualityScore.lsp = qualityImage.qualityScore
+        qualityScore.lmp = imageScore
       case 17 =>
-        qualityScore.lzp = qualityImage.qualityScore
+        qualityScore.lsp = imageScore
       case 18 =>
-        qualityScore.lhp = qualityImage.qualityScore
+        qualityScore.lzp = imageScore
       case 19 =>
-        qualityScore.lxp = qualityImage.qualityScore
+        qualityScore.lhp = imageScore
+      case 20 =>
+        qualityScore.lxp = imageScore
     }
+    qualityScore
   }
 
   /**
@@ -132,8 +146,8 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
     */
   def saveImg(personId :String, fgp: Int, origin : Array[Byte], rwImg : Array[Byte]): Unit ={
 
-    val saveOriginImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort, hallBatchConfig.ftpPath + "/" + personId, personId+ "_" + fgp +".bmp", new ByteArrayInputStream(origin))
-    val saveRwImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort, hallBatchConfig.ftpPath + "/" + personId, personId+ "_" + fgp +".jpg", new ByteArrayInputStream(rwImg))
+    val saveOriginImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort,  personId+ "/" , personId+ "_" + fgp +".bmp", new ByteArrayInputStream(origin))
+    val saveRwImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort,  personId + "/", personId+ "_" + fgp +".jpg", new ByteArrayInputStream(rwImg))
     if(!saveOriginImg) logger.info("保存原图-" + personId+ "_" + fgp +".bmp" + "- 失败")
     if(!saveRwImg) logger.info("保存红白图-" + personId+ "_" + fgp +".jpg" + "- 失败")
   }

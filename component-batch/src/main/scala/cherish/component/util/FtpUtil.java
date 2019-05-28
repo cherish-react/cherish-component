@@ -70,7 +70,14 @@ public class FtpUtil {
             ftpClient.setControlEncoding("UTF-8"); // 中文支持
             ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
             ftpClient.enterLocalPassiveMode();
-            ftpClient.changeWorkingDirectory(ftpPath);
+
+            if(ftpPath.equals("/")){//如果输入的路径为空或者为根路径，则不转换操作目录
+
+            }else{//否则创建想要上传文件的目录，并且将操作目录转为新创建的目录
+                ftpClient.makeDirectory(ftpPath);
+                boolean b = ftpClient.changeWorkingDirectory(ftpPath);
+                System.out.println("转换目录结果:"+b);
+            }
 
             ftpClient.storeFile(fileName, input);
 
