@@ -5,7 +5,7 @@ REM site: http://www.ganshane.com
 setlocal
 call "%~dp0batch-env.cmd"
 
-set REACTMAIN=cherish.component.batch.App
+set REACTMAIN=cherish.component.App
 
 REM set extra_module v62:nirvana.hall.v62.LocalV62Module,nirvana.hall.v62.LocalV62ServiceModule,stark.activerecord.StarkActiveRecordModule,nirvana.hall.v62.LocalV62DataSourceModule
 REM set extra_module v70:nirvana.hall.v70.LocalV70Module,nirvana.hall.v70.LocalV70ServiceModule,stark.activerecord.StarkActiveRecordModule,nirvana.hall.v70.LocalDataSourceModule

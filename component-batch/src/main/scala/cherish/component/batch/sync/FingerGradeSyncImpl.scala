@@ -4,7 +4,7 @@ import java.io._
 import java.util.UUID
 
 import cherish.component.batch.service.{FingerGradeService, JpaSaveOrUpdateService}
-import cherish.component.config.HallBatchConfig
+import cherish.component.config.{BatchConfig}
 import cherish.component.jni.{NativeQualityScore, QualityImage}
 import cherish.component.jpa.{QualityScore, Tpcardimgmnt}
 import cherish.component.util.{FtpUtil, KryoListConvertUtils}
@@ -13,7 +13,7 @@ import monad.support.services.LoggerSupport
 import org.apache.tapestry5.ioc.annotations.PostInjection
 import org.apache.tapestry5.ioc.services.cron.PeriodicExecutor
 
-class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
+class FingerGradeSyncImpl(batchConfig : BatchConfig,
                           fingerGradeService: FingerGradeService,
                           jpaSaveOrUpdateService: JpaSaveOrUpdateService)extends LoggerSupport{
 
@@ -25,8 +25,8 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
     */
   @PostInjection
   def startUp(periodicExecutor: PeriodicExecutor): Unit = {
-    if(hallBatchConfig.sync.syncCron != null){
-      periodicExecutor.addJob(new CronScheduleWithStartModel(hallBatchConfig.sync.syncCron , StartAtDelay), "sync-cron", new Runnable {
+    if(batchConfig.sync.syncCron != null){
+      periodicExecutor.addJob(new CronScheduleWithStartModel(batchConfig.sync.syncCron , StartAtDelay), "sync-cron", new Runnable {
         override def run(): Unit = {
           info("begin sync-cron")
           try{
@@ -53,7 +53,7 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
       var pScore :Double = 0   //平指采集独立得分
       var rScore :Double = 0   //滚指采集独立得分
       val personId = tpcardimgmnt.personid
-      val ftpPath = hallBatchConfig.ftpPath + "/" + personId
+      val ftpPath = batchConfig.ftpPath + "/" + personId
       while(imgDataList.hasNext){
         val imageData = imgDataList.next()
         if(null != imageData.mntData){
@@ -146,8 +146,8 @@ class FingerGradeSyncImpl(hallBatchConfig : HallBatchConfig,
     */
   def saveImg(personId :String, fgp: Int, origin : Array[Byte], rwImg : Array[Byte]): Unit ={
 
-    val saveOriginImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort,  personId+ "/" , personId+ "_" + fgp +".bmp", new ByteArrayInputStream(origin))
-    val saveRwImg =  FtpUtil.uploadFile(hallBatchConfig.ftpHost, hallBatchConfig.ftpUserName, hallBatchConfig.ftpPassword, hallBatchConfig.ftpPort,  personId + "/", personId+ "_" + fgp +".jpg", new ByteArrayInputStream(rwImg))
+    val saveOriginImg =  FtpUtil.uploadFile(batchConfig.ftpHost, batchConfig.ftpUserName, batchConfig.ftpPassword, batchConfig.ftpPort,  personId+ "/" , personId+ "_" + fgp +".bmp", new ByteArrayInputStream(origin))
+    val saveRwImg =  FtpUtil.uploadFile(batchConfig.ftpHost, batchConfig.ftpUserName, batchConfig.ftpPassword, batchConfig.ftpPort,  personId + "/", personId+ "_" + fgp +".jpg", new ByteArrayInputStream(rwImg))
     if(!saveOriginImg) logger.info("保存原图-" + personId+ "_" + fgp +".bmp" + "- 失败")
     if(!saveRwImg) logger.info("保存红白图-" + personId+ "_" + fgp +".jpg" + "- 失败")
   }

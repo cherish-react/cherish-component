@@ -4,7 +4,7 @@ import java.util.{Date, UUID}
 import java.util.concurrent.Executors
 
 import cherish.component.batch.service.{BatchIsQualifiedService, FingerGradeService, JpaSaveOrUpdateService}
-import cherish.component.config.HallBatchConfig
+import cherish.component.config.{BatchConfig}
 import cherish.component.jpa.{PersonInfo, WorkQueue}
 import cherish.component.util.HttpClientUtils
 import monad.support.services.LoggerSupport
@@ -15,7 +15,7 @@ import monad.support.services.LoggerSupport
   * @since 2019/5/17
   */
 class BatchIsQualifiedServiceImpl(fingerGradeService: FingerGradeService,
-                                  hallBatchConfig: HallBatchConfig,
+                                  batchConfig: BatchConfig,
                                   jpaSaveOrUpdateService: JpaSaveOrUpdateService) extends BatchIsQualifiedService with LoggerSupport{
 
   private lazy val executor = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors())
@@ -56,7 +56,7 @@ class BatchIsQualifiedServiceImpl(fingerGradeService: FingerGradeService,
           workQueue.workState = 2
           jpaSaveOrUpdateService.workQueueUpdate(workQueue)
           try{
-            val result = HttpClientUtils.doGet(hallBatchConfig.rpc + "/pages/statistics/changeWorkQueueState/2")
+            val result = HttpClientUtils.doGet(batchConfig.rpc + "/pages/statistics/changeWorkQueueState/2")
           }catch{
             case ex:Exception =>
               error("httpClient错误："+ex.getMessage)

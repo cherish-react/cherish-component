@@ -1,5 +1,4 @@
-package cherish
-
+package cherish.component
 
 import com.react.config.WebServerConfig
 import com.react.server.JettyServerSupport
@@ -13,14 +12,14 @@ import org.slf4j.LoggerFactory
  */
 object App extends JettyServerSupport with LoggerSupport{
   def main(args: Array[String]): Unit = {
-    val serverHome = System.getProperty(MonadCoreSymbols.SERVER_HOME, "support")
-    System.setProperty(MonadCoreSymbols.SERVER_HOME, serverHome)
+    val serverHome = System.getProperty("server.home", "support")
+    System.setProperty("server.home", serverHome)
 
     val classes = List[Class[_]](
       Class.forName("cherish.component.DataSourceModule"),
       Class.forName("cherish.component.BatchModule"),
       Class.forName("cherish.component.BatchCronModule"),
-      Class.forName("cherish.component.HallBatchModule"),
+      Class.forName("cherish.component.BatchConfigModule"),
       Class.forName("cherish.component.api.LocalApiConfigurationModule"),
       Class.forName("cherish.component.database.jpa.EntityManagerSourceModule")
     )

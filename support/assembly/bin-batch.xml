@@ -13,14 +13,14 @@
     <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>support/config</directory>
+            <directory>../support/config</directory>
             <includes>
-                <include>batch-config.xml.example</include>
+                <include>cherish-batch.xml</include>
             </includes>
             <outputDirectory>config</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>support/bin</directory>
+            <directory>../support/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>batch-app</include>
@@ -38,7 +38,15 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../batch-app</directory>
+            <directory>../support/jre</directory>
+            <outputDirectory>jre</outputDirectory>
+            <includes>
+                <include>changelog.txt</include>
+                <include>README.txt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../component-batch</directory>
             <outputDirectory>doc/thirdparty</outputDirectory>
             <includes>
                 <include>LICENSE*.txt</include>

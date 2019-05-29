@@ -3,7 +3,7 @@ package cherish.component
 import java.sql.Connection
 import javax.sql.DataSource
 
-import cherish.component.config.HallBatchConfig
+import cherish.component.config.{BatchConfig}
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import net.sf.log4jdbc.ConnectionSpy
 import org.apache.tapestry5.ioc.Configuration
@@ -17,7 +17,7 @@ import org.apache.tapestry5.ioc.services.RegistryShutdownHub
 object DataSourceModule {
 
   @EagerLoad
-  def buildDataSource(config : HallBatchConfig, hub: RegistryShutdownHub): DataSource ={
+  def buildDataSource(config : BatchConfig, hub: RegistryShutdownHub): DataSource ={
     val hikariConfig = new HikariConfig()
 //    hikariConfig.setDriverClassName("oracle.jdbc.driver.OracleDriver")
 //    hikariConfig.setJdbcUrl("jdbc:oracle:thin:@192.168.1.213:1521:oragafis")

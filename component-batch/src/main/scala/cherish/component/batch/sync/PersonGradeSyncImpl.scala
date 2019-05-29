@@ -4,14 +4,14 @@ import java.util.Date
 
 import cherish.component.api.jpa.{CaseDimen, HukouDimen, PersonLevel}
 import cherish.component.batch.service.{BatchIsQualifiedService, JpaSaveOrUpdateService}
-import cherish.component.config.HallBatchConfig
+import cherish.component.config.{BatchConfig}
 import cherish.component.jpa.{PersonInfo, QualityScore, WorkQueue}
 import monad.core.services.{CronScheduleWithStartModel, StartAtDelay}
 import monad.support.services.LoggerSupport
 import org.apache.tapestry5.ioc.annotations.PostInjection
 import org.apache.tapestry5.ioc.services.cron.PeriodicExecutor
 
-class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
+class PersonGradeSyncImpl(batchConfig : BatchConfig,
                           batchIsQualifiedService: BatchIsQualifiedService,
                           jpaSaveOrUpdateService: JpaSaveOrUpdateService)extends LoggerSupport{
 
@@ -21,8 +21,8 @@ class PersonGradeSyncImpl(hallBatchConfig : HallBatchConfig,
     */
   @PostInjection
   def startUp(periodicExecutor: PeriodicExecutor): Unit = {
-    if(hallBatchConfig.sync.syncCron != null){
-      periodicExecutor.addJob(new CronScheduleWithStartModel(hallBatchConfig.sync.syncCron , StartAtDelay), "sync-cron", new Runnable {
+    if(batchConfig.sync.syncCron != null){
+      periodicExecutor.addJob(new CronScheduleWithStartModel(batchConfig.sync.syncCron , StartAtDelay), "sync-cron", new Runnable {
         override def run(): Unit = {
           info("begin sync-cron")
           try{
