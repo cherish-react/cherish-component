@@ -2,7 +2,7 @@ package cherish.component.config
 
 import javax.xml.bind.annotation._
 
-import monad.core.config.{HeartbeatConfigSupport, LocalStoreConfigSupport, LogFileSupport, ZkClientConfigSupport}
+import monad.core.config._
 import monad.support.services.WebServerConfigSupport
 
 
@@ -32,6 +32,10 @@ class HallBatchConfig
   var ftpPassword: String = _
   @XmlElement(name = "ftpPath")
   var ftpPath: String = _
+
+  @XmlElement(name = "database")
+  var db: DatabaseConfig = new DatabaseConfig()
+
 
 }
 

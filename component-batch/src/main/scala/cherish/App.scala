@@ -17,7 +17,7 @@ object App extends JettyServerSupport with LoggerSupport{
     System.setProperty(MonadCoreSymbols.SERVER_HOME, serverHome)
 
     val classes = List[Class[_]](
-      Class.forName("cherish.component.api.DataSourceModule"),
+      Class.forName("cherish.component.DataSourceModule"),
       Class.forName("cherish.component.BatchModule"),
       Class.forName("cherish.component.BatchCronModule"),
       Class.forName("cherish.component.HallBatchModule"),
