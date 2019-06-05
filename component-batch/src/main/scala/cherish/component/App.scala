@@ -14,6 +14,7 @@ object App extends JettyServerSupport with LoggerSupport{
   def main(args: Array[String]): Unit = {
     val serverHome = System.getProperty("server.home", "support")
     System.setProperty("server.home", serverHome)
+    val config = BatchConfigModule.buildBatchConfig(serverHome)
 
     val classes = List[Class[_]](
       Class.forName("cherish.component.DataSourceModule"),
@@ -25,7 +26,7 @@ object App extends JettyServerSupport with LoggerSupport{
     )
     val loggger = LoggerFactory.getLogger(classOf[App])
     val webConfig = new WebServerConfig
-    webConfig.bind = "0.0.0.0:10000"
+    webConfig.bind = config.web.bind
     startServer(webConfig,"cherish.component",classes:_*)
     loggger.info("started")
     join

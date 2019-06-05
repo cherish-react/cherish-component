@@ -7,9 +7,9 @@ import monad.support.services.WebServerConfigSupport
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "HallBatchConfig")
-@XmlRootElement(name = "hall_batch")
-class HallBatchConfig
+@XmlType(name = "BatchConfig")
+@XmlRootElement(name = "cherish_batch")
+class BatchConfig
   extends LogFileSupport
     with WebServerConfigSupport
     with LocalStoreConfigSupport

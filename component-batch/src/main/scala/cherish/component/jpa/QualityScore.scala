@@ -66,6 +66,8 @@ class QualityScore extends ActiveRecord {
   var imgUrl: java.lang.String = _
   @Column(name = "total_score")
   var totalScore: java.lang.Double = _
+  @Column(name = "quality_level")
+  var qualityLevel: java.lang.Integer = _
 
 
   def this(id: java.lang.String) {
@@ -73,7 +75,7 @@ class QualityScore extends ActiveRecord {
     this.id = id
   }
 
-  def this(id: java.lang.String, cardid: java.lang.String, rmp: java.lang.Float, rsp: java.lang.Float, rzp:java.lang.Float, rhp: java.lang.Float, rxp: java.lang.Float, lmp: java.lang.Float, lsp: java.lang.Float, lzp: java.lang.Float, lhp: java.lang.Float, lxp: java.lang.Float, rmr: java.lang.Float, rsr: java.lang.Float, rzr: java.lang.Float, rhr: java.lang.Float, rxr: java.lang.Float, lmr: java.lang.Float, lsr: java.lang.Float, lzr: java.lang.Float, lhr: java.lang.Float, lxr: java.lang.Float, imgUrl: java.lang.String, totalScore: java.lang.Double) {
+  def this(id: java.lang.String, cardid: java.lang.String, rmp: java.lang.Float, rsp: java.lang.Float, rzp:java.lang.Float, rhp: java.lang.Float, rxp: java.lang.Float, lmp: java.lang.Float, lsp: java.lang.Float, lzp: java.lang.Float, lhp: java.lang.Float, lxp: java.lang.Float, rmr: java.lang.Float, rsr: java.lang.Float, rzr: java.lang.Float, rhr: java.lang.Float, rxr: java.lang.Float, lmr: java.lang.Float, lsr: java.lang.Float, lzr: java.lang.Float, lhr: java.lang.Float, lxr: java.lang.Float, imgUrl: java.lang.String, totalScore: java.lang.Double, qualityLevel: java.lang.Integer) {
     this()
     this.id = id
     this.cardid = cardid
@@ -99,6 +101,7 @@ class QualityScore extends ActiveRecord {
     this.lxr = lxr
     this.imgUrl = imgUrl
     this.totalScore = totalScore
+    this.qualityLevel = qualityLevel
   }
 }
 
