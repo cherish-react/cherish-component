@@ -22,6 +22,9 @@ class BatchConfig
   @XmlElement(name = "rpc")
   var rpc: String = _
 
+  @XmlElement(name = "threadNum")
+  var threadNum: Int = _
+
   @XmlElement(name = "ftpHost")
   var ftpHost: String = _
   @XmlElement(name = "ftpPort")
