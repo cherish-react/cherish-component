@@ -53,7 +53,7 @@ class BatchIsQualifiedServiceImpl(fingerGradeService: FingerGradeService,
           }
           //判断是否达标完成后，修改work_queue状态,并通知统计服务
           workQueue.endTime = new Date()
-          workQueue.workState = 5
+          workQueue.workState = 2
           jpaSaveOrUpdateService.workQueueUpdate(workQueue)
           try{
             val result = HttpClientUtils.doGet(batchConfig.rpc + "/pages/statistics/changeWorkQueueState/2")

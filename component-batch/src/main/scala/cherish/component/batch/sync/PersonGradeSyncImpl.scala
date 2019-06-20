@@ -84,11 +84,11 @@ class PersonGradeSyncImpl(batchConfig : BatchConfig,
         }
       }
     }else{
-      //如果所有人员定级结束并且work_queue表存在work_type=1 and work_state=1 的数据，修改work_state为2并调用人员达标判断
+      //如果所有人员定级结束并且work_queue表存在work_type=1 and work_state=1 的数据，修改work_state为5并调用人员达标判断
       val workQueueList = WorkQueue.findBy_workType_and_workState(1,1)    //理论最多只存在一条数据
       if(workQueueList.size()>0){
         var workQueue = workQueueList.get(0)
-        workQueue.workState = 2
+        workQueue.workState = 5
         workQueue.endTime = new Date()
         jpaSaveOrUpdateService.workQueueUpdate(workQueue)
 
