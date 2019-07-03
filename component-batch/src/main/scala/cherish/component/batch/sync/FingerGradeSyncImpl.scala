@@ -88,7 +88,7 @@ class FingerGradeSyncImpl(batchConfig : BatchConfig,
             val imageData = imgDataList.get(i)
             if (null != imageData.mntData) {
               try {
-//                logger.info(personId + "指位：" + imageData.fgp + "开始调用动态库打分")
+                logger.info(personId + "指位：" + imageData.fgp + "开始调用动态库打分")
                 val fgp = if (imageData.fgp > 10) imageData.fgp - 10 else imageData.fgp
                 val qualityImage = NativeQualityScore.GetQualityScore(imageData.imgData, imageData.mntData, fgp, "QualityImage") //图像打分
                 logger.info(personId + "指位：" + imageData.fgp + "调用动态库打分结束:" + qualityImage.qualityScore)
@@ -120,7 +120,7 @@ class FingerGradeSyncImpl(batchConfig : BatchConfig,
           val qualityScoreRangeList = QualityScoreRange.get.iterator()
           while (qualityScoreRangeList.hasNext) {
             val qualityScoreRange = qualityScoreRangeList.next()
-            if (totalScore >= qualityScoreRange.minScore && totalScore <= qualityScoreRange.maxScore) {
+            if (totalScore >= qualityScoreRange.minScore && totalScore < qualityScoreRange.maxScore) {
               qualityScore.qualityLevel = qualityScoreRange.level
             }
           }

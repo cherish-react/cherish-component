@@ -24,12 +24,17 @@ class FingerGradeServiceImpl(jpaSaveOrUpdateService: JpaSaveOrUpdateService) ext
           val personLevelScore = personLevelScoreList.get(0)
           //人员指位等级
           val qualityScoreRangeList = QualityScoreRange.get.iterator()
+          val qualityScore = QualityScore.findBy_cardid(personid).get(0)  //人员指位分数
           val scoreMap = new mutable.HashMap[Int, Int]() //map存放等级 对应的分数
           while (qualityScoreRangeList.hasNext) {
             val qualityScoreRange = qualityScoreRangeList.next()
             scoreMap.put(qualityScoreRange.level, qualityScoreRange.minScore)
+            //重新判断指纹总分的等级
+            if (qualityScore.totalScore >= qualityScoreRange.minScore && qualityScore.totalScore < qualityScoreRange.maxScore) {
+              qualityScore.qualityLevel = qualityScoreRange.level
+            }
           }
-          val qualityScore = QualityScore.findBy_cardid(personid).get(0)  //人员指位分数
+
           var pQualified: Boolean = true  //平指是否达标  true达标  false不达标
           var rQualified: Boolean = true //滚指是否达标  true达标  false不达标
           //人员平指或滚指，只要采集了一个就默认全部采集，若有缺少则认为不达标

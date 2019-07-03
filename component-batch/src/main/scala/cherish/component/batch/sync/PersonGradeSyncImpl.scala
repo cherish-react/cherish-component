@@ -45,19 +45,15 @@ class PersonGradeSyncImpl(batchConfig : BatchConfig,
       val personLevel = if(personLevelList.size()>0) personLevelList.get(0) else null
       // 人员定级标准表 flag=1
       val hukouDimen = HukouDimen.select("select address_code from hukou_dimen where dimen_id = '" + personLevel.hukouDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
-      val caseDimen = CaseDimen.select("select case_code from case_dimen where dimen_id =' " + personLevel.caseDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
+      val caseDimen = CaseDimen.select("select case_code from case_dimen where dimen_id ='" + personLevel.caseDimenId +"'").getResultList.asInstanceOf[java.util.ArrayList[String]]
 
       for (i <- 0 until personInfoList.size()) {
         val personInfo = personInfoList.get(i)
         if (personLevel == null) {
-          jpaSaveOrUpdateService.updatePersonInfo(personInfo, 3, personLevel.id)
+          jpaSaveOrUpdateService.updatePersonInfo(personInfo, 3, "")
         } else {
-          val birthAddressCode = personInfo.birthAddressCode
-          //人员出生地代码
-          val criminalRecord = personInfo.criminalRecord
-          //前科标识
-          val caseType1 = personInfo.caseType1
-          //案件类别1
+          val birthAddressCode = personInfo.birthAddressCode    //人员出生地代码
+          val caseType1 = personInfo.caseType1    //案件类别1
           val caseType2 = personInfo.caseType2
           val caseType3 = personInfo.caseType3
 
