@@ -24,6 +24,9 @@ trait JpaSaveOrUpdateService {
     def qualityScoreSave(qualityScore: QualityScore):Unit
 
     @Transactional
+    def qualityScoreUpdate(qualityScore: QualityScore):Unit
+
+    @Transactional
     def tpcardimgmntUpdate(tpcardimgmnt: Tpcardimgmnt):Unit
 
 }

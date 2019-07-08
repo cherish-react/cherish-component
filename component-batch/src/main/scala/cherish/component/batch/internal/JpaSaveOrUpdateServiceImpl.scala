@@ -35,6 +35,10 @@ class JpaSaveOrUpdateServiceImpl extends JpaSaveOrUpdateService with LoggerSuppo
     qualityScore.save()
   }
 
+  override def qualityScoreUpdate(qualityScore: QualityScore): Unit ={
+    qualityScore.update()
+  }
+
   override def tpcardimgmntUpdate(tpcardimgmnt: Tpcardimgmnt): Unit ={
     tpcardimgmnt.update()
   }

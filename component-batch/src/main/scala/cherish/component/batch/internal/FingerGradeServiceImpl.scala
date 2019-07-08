@@ -56,6 +56,7 @@ class FingerGradeServiceImpl(jpaSaveOrUpdateService: JpaSaveOrUpdateService) ext
           }
           if (pQualified && rQualified) personInfo.isQualified = 1 else personInfo.isQualified = 0
 
+          jpaSaveOrUpdateService.qualityScoreUpdate(qualityScore)
           jpaSaveOrUpdateService.updatePersonInfo(personInfo)
         } else {
           throw new Exception(levelConvert(personLevel) + "级人员指位等级未设置！")
