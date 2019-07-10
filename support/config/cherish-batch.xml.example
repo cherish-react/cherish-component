@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+   Copyright 2012,2015 the original author or authors. All rights reserved.
+   site: http://www.ganshane.com
+-->
+
+<cherish_batch>
+    <log_file>${server.home}/log/hall.batch.log</log_file>
+
+    <zk>
+        <address>127.0.0.1:2181</address>
+    </zk>
+    <rpc>127.0.0.1:8080/springrestful</rpc>     <!--web服务运行地址-->
+    <threadNum>1</threadNum>       <!-- 人员打分启动线程数，建议配置不要超过CPU最大线程 -->
+
+    <web>
+        <bind>127.0.0.1:10000</bind>
+    </web>
+    <sync>
+        <sync_cron>0/2 * * * * ? *</sync_cron>        <!--定时任务的运行时间-->
+    </sync>
+
+    <!--<ftpHost>192.168.1.167</ftpHost>      &lt;!&ndash;指纹图片保存到FTP的地址&ndash;&gt;-->
+    <!--<ftpPort>21</ftpPort>                 &lt;!&ndash;FTP端口号&ndash;&gt;-->
+    <!--<ftpUserName>ssj</ftpUserName>        &lt;!&ndash;FTP账号&ndash;&gt;-->
+    <!--<ftpPassword>ssj</ftpPassword>        &lt;!&ndash;FTP密码&ndash;&gt;-->
+    <!--<ftpPath></ftpPath>             &lt;!&ndash;图片保存的路径 例：image/  注：目录后方加/，开头不能加/ &ndash;&gt;-->
+
+    <ftpHost>192.168.1.120</ftpHost>      <!--指纹图片保存到FTP的地址-->
+    <ftpPort>21</ftpPort>                 <!--FTP端口号-->
+    <ftpUserName>ciser</ftpUserName>        <!--FTP账号-->
+    <ftpPassword>ciser</ftpPassword>        <!--FTP密码-->
+    <ftpPath>imageUrl/</ftpPath>             <!--图片保存的路径 例：image/  注：目录后方加/，开头不能加/ -->
+
+    <!-- 数据库配置 -->
+    <database>
+        <driver>oracle.jdbc.driver.OracleDriver</driver>
+        <user>cherish</user>
+        <password>cherish</password>
+        <url>jdbc:oracle:thin:@192.168.1.121:1521:oragafis</url>
+    </database>
+
+</cherish_batch>
